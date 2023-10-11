@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Button, TextField, Grid, Alert, Snackbar } from "@mui/material";
+import { Auth } from "aws-amplify";
+import { useUser } from "../context/AuthContext";
 
 
 type Props = {}
@@ -17,6 +19,7 @@ interface IFormInputs {
 export default function signup() {
     const [alertOpen, setAlertOpen] = useState(false);
     const [signupError, setSignupError] = useState<string>("");
+    const { user, setUser } = useUser();
 
     const { register, formState: { errors }, handleSubmit } = useForm<IFormInputs>();
 
@@ -52,7 +55,7 @@ export default function signup() {
                 }
             })
         } catch (e) {
-            console.log("sign up error: ", e);
+            throw e;
         }
     }
 
