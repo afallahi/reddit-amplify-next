@@ -10,6 +10,14 @@
       "StackName": "amplify-redditsls-dev-225825",
       "StackId": "arn:aws:cloudformation:us-east-1:558532633158:stack/amplify-redditsls-dev-225825/0c9623a0-67e2-11ee-9825-12da47a51ae3",
       "AmplifyAppId": "d3nmpzbci9elqr"
+    },
+    "categories": {
+      "auth": {
+        "redditslsc8801eaf": {}
+      },
+      "api": {
+        "redditsls": {}
+      }
     }
   }
 }
