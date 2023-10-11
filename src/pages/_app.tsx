@@ -7,6 +7,11 @@ import { CacheProvider, EmotionCache } from '@emotion/react';
 import theme from '../../config/theme';
 import createEmotionCache from '../../config/createEmotionCache';
 
+import Amplify from "@aws-amplify/core";
+import { Auth } from "aws-amplify";
+import awsconfig from "../aws-exports";
+Amplify.configure({ ...awsconfig, ssr: true }); // enable server side rendering
+
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
 interface MyAppProps extends AppProps {
