@@ -9,6 +9,19 @@ type Props = {
 }
 
 export default function PostView({ post }: Props) {
+
+    const convertDateToElapsedTime = (date: string): string => {
+
+        const diff = (new Date(Date.now())).getTime() - (new Date(date)).getTime();
+        const hours = diff / 1000 / 60 / 60;
+        if (hours < 24) {
+            return (diff / 1000 / 60 / 60).toFixed(0) + "hours ago";
+        } else {
+            const days = hours / 24;
+            return days.toFixed(0) + "days ago";
+        }
+    }
+
     return (
         <Paper elevation={4}>
             <Grid
@@ -29,7 +42,20 @@ export default function PostView({ post }: Props) {
                                 <ArrowUpwardIcon style={{ maxWidth: 20 }} />
                             </IconButton>
                         </Grid>
-                        <Grid item>votes</Grid>
+
+                        <Grid item>
+                            <Grid container alignItems='center' direction='column'>
+                                <Grid item>
+                                    <Typography variant="body1">
+                                        {(post.upvotes - post.downvotes).toString()}
+                                    </Typography>
+                                </Grid>
+                                <Grid item>
+                                    <Typography variant="body2">votes</Typography>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+
                         <Grid item>
                             <IconButton color="inherit">
                                 <ArrowDownwardIcon style={{ maxWidth: 20 }} />
@@ -38,13 +64,17 @@ export default function PostView({ post }: Props) {
                     </Grid>
                 </Grid>
 
-                <Grid item>
+                {/* main body */}
+                <Grid item style={{ maxWidth: "70%" }}>
                     <Grid container alignItems="flex-start" direction="column">
                         <Grid item>
-                            <Typography variant="body1">Posted by <b>{post.owner}</b> at <b>{post.createdAt}</b></Typography>
+                            <Typography variant="body1">Posted by <b>{post.owner}</b> {" "} {convertDateToElapsedTime(post.createdAt)}</Typography>
                         </Grid>
                         <Grid item>
                             <Typography variant="h2">{post.title}</Typography>
+                        </Grid>
+                        <Grid item style={{ maxHeight: 50, overflowX: 'hidden', overflowY: 'clip' }}>
+                            <Typography variant="body1">{post.contents}</Typography>
                         </Grid>
                     </Grid>
 

@@ -15,6 +15,10 @@ export const createPost = /* GraphQL */ `mutation CreatePost(
   createPost(input: $input, condition: $condition) {
     id
     title
+    contents
+    image
+    upvotes
+    downvotes
     comments {
       items {
         id
@@ -45,6 +49,10 @@ export const updatePost = /* GraphQL */ `mutation UpdatePost(
   updatePost(input: $input, condition: $condition) {
     id
     title
+    contents
+    image
+    upvotes
+    downvotes
     comments {
       items {
         id
@@ -75,6 +83,10 @@ export const deletePost = /* GraphQL */ `mutation DeletePost(
   deletePost(input: $input, condition: $condition) {
     id
     title
+    contents
+    image
+    upvotes
+    downvotes
     comments {
       items {
         id
@@ -108,6 +120,10 @@ export const createComment = /* GraphQL */ `mutation CreateComment(
     post {
       id
       title
+      contents
+      image
+      upvotes
+      downvotes
       comments {
         nextToken
         __typename
@@ -138,6 +154,10 @@ export const updateComment = /* GraphQL */ `mutation UpdateComment(
     post {
       id
       title
+      contents
+      image
+      upvotes
+      downvotes
       comments {
         nextToken
         __typename
@@ -168,6 +188,10 @@ export const deleteComment = /* GraphQL */ `mutation DeleteComment(
     post {
       id
       title
+      contents
+      image
+      upvotes
+      downvotes
       comments {
         nextToken
         __typename
