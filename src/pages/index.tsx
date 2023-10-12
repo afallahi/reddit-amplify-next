@@ -1,9 +1,10 @@
-import { Typography } from '@mui/material'
+import { Container, Typography } from '@mui/material'
 import { useUser } from '../context/AuthContext'
 import { listPosts } from '../graphql/queries';
 import { useEffect, useState } from 'react';
 import { API } from 'aws-amplify';
 import { ListPostsQuery, Post } from '../API';
+import PostView from '../components/PostView';
 
 
 export default function Home() {
@@ -30,11 +31,16 @@ export default function Home() {
 
   }, []);
 
-  console.log("User: ", user);
-  console.log("Posts: ", posts);
+  // console.log("User: ", user);
+  // console.log("Posts: ", posts);
 
   return (
-    < Typography variant="h1" > "Hello World!"</Typography >
-  )
+    // < Typography variant="h1" > "Hello World!"</Typography >
+    <Container maxWidth="md">
+      {posts.map((post) => (
+        <PostView post={post} key={post.id} />
+      ))}
+    </Container>
+  );
 }
 
