@@ -4,6 +4,8 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { Button, TextField, Grid, Alert, Snackbar } from "@mui/material";
 import { Auth } from "aws-amplify";
 import { useUser } from "../context/AuthContext";
+import { CognitoUser } from "@aws-amplify/auth";
+import { useRouter } from "next/router";
 
 
 type Props = {}
@@ -13,6 +15,7 @@ interface IFormInputs {
     username: string;
     email: string;
     password: string;
+    code: string;
 };
 
 
@@ -20,12 +23,19 @@ export default function signup() {
     const [alertOpen, setAlertOpen] = useState(false);
     const [signupError, setSignupError] = useState<string>("");
     const { user, setUser } = useUser();
+    const [showCode, setShowCode] = useState(false);
+    const router = useRouter();
 
     const { register, formState: { errors }, handleSubmit } = useForm<IFormInputs>();
 
     const onSubmit: SubmitHandler<IFormInputs> = async (data) => {
         try {
-            signUpWithCredentials(data);
+            if (showCode) {
+                confirmSignUp(data);
+            } else {
+                await signUpWithCredentials(data);
+                setShowCode(true);
+            }
         } catch (e) {
             console.log("Error: ", e);
             setSignupError(e.message);
@@ -42,7 +52,7 @@ export default function signup() {
         setAlertOpen(false);
     }
 
-    async function signUpWithCredentials(data: IFormInputs) {
+    async function signUpWithCredentials(data: IFormInputs): Promise<CognitoUser> {
 
         const { username, email, password } = data;
 
@@ -53,9 +63,28 @@ export default function signup() {
                 attributes: {
                     email
                 }
-            })
+            });
+            console.log(`User: ${user} signed up.`)
+            return user;
         } catch (e) {
             throw e;
+        }
+    }
+
+    async function confirmSignUp(data: IFormInputs) {
+        const { username, password, code } = data;
+        try {
+            await Auth.confirmSignUp(username, code);
+            const ampUser = await Auth.signIn(username, password);
+            console.log(`User ${ampUser} signed in successfully.`);
+            if (ampUser) {
+                router.push('/');
+            } else {
+                throw new Error('Authentication error. Please try again.');
+            }
+
+        } catch (e) {
+            console.log(e);
         }
     }
 
@@ -69,7 +98,7 @@ export default function signup() {
                 justifyItems={"center"}
                 spacing={2}
             >
-                <Grid item>
+                <Grid item style={{ marginTop: 10 }}>
                     <TextField
                         variant="outlined"
                         id="username"
@@ -107,13 +136,43 @@ export default function signup() {
                         helperText={errors.password ? errors.password.message : null}
                         {...register("password", {
                             required: { value: true, message: "Password is empty" },
+                            minLength: {
+                                value: 6,
+                                message: "Password with minimum length of 6 required."
+                            }
                         })}
                     />
                 </Grid>
 
+                {showCode && (
+                    <Grid item>
+                        <TextField
+                            variant="outlined"
+                            id="code"
+                            label="Verification Code"
+                            type="text"
+                            error={errors.code ? true : false}
+                            helperText={errors.code ? errors.code.message : null}
+                            {...register("code", {
+                                required: { value: true, message: "enter a code" },
+                                minLength: {
+                                    value: 6,
+                                    message: "code length is 6"
+                                },
+                                maxLength: {
+                                    value: 6,
+                                    message: "code length is 6"
+                                }
+                            })}
+                        />
+                    </Grid>
 
-                <Grid>
-                    <Button variant="contained" type="submit">Sign Up</Button>
+
+                )}
+                <Grid style={{ marginTop: 10 }}>
+                    <Button variant="contained" type="submit">
+                        {showCode ? "Confirm Code" : "Sign Up"}
+                    </Button>
                 </Grid>
 
             </Grid>
