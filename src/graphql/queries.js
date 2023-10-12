@@ -12,6 +12,7 @@ export const getPost = /* GraphQL */ `
       }
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
@@ -28,6 +29,7 @@ export const listPosts = /* GraphQL */ `
         title
         createdAt
         updatedAt
+        owner
         __typename
       }
       nextToken
@@ -45,11 +47,13 @@ export const getComment = /* GraphQL */ `
         title
         createdAt
         updatedAt
+        owner
         __typename
       }
       content
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
@@ -67,6 +71,7 @@ export const listComments = /* GraphQL */ `
         content
         createdAt
         updatedAt
+        owner
         __typename
       }
       nextToken
@@ -95,6 +100,7 @@ export const commentsByPostID = /* GraphQL */ `
         content
         createdAt
         updatedAt
+        owner
         __typename
       }
       nextToken
