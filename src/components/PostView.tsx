@@ -1,17 +1,19 @@
 import React from 'react'
 import { Post } from '../API'
-import { Grid, IconButton, Paper, Typography } from '@mui/material';
+import { ButtonBase, Grid, IconButton, Paper, Typography } from '@mui/material';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import Image from "next/image";
+import { useRouter } from 'next/router';
 
 type Props = {
     post: Post
 }
 
 export default function PostView({ post }: Props) {
+    const router = useRouter();
 
     const convertDateToElapsedTime = (date: string): string => {
-
         const diff = (new Date(Date.now())).getTime() - (new Date(date)).getTime();
         const hours = diff / 1000 / 60 / 60;
         if (hours < 24) {
@@ -30,8 +32,10 @@ export default function PostView({ post }: Props) {
                 spacing={2}
                 alignItems='flex-start'
                 justifyContent="flex-start"
-                style={{ width: "100%", padding: 10, marginTop: 12 }}
+                style={{ padding: 10, marginTop: 12 }}
+                wrap='nowrap'
             >
+                {/* votes */}
                 <Grid
                     item
                     style={{ maxWidth: 200 }}
@@ -65,19 +69,34 @@ export default function PostView({ post }: Props) {
                 </Grid>
 
                 {/* main body */}
-                <Grid item style={{ maxWidth: "70%" }}>
-                    <Grid container alignItems="flex-start" direction="column">
-                        <Grid item>
-                            <Typography variant="body1">Posted by <b>{post.owner}</b> {" "} {convertDateToElapsedTime(post.createdAt)}</Typography>
-                        </Grid>
-                        <Grid item>
-                            <Typography variant="h2">{post.title}</Typography>
-                        </Grid>
-                        <Grid item style={{ maxHeight: 50, overflowX: 'hidden', overflowY: 'clip' }}>
-                            <Typography variant="body1">{post.contents}</Typography>
-                        </Grid>
-                    </Grid>
+                <Grid item>
+                    <ButtonBase onClick={() => router.push(`/post/${post.id}`)}>
+                        <Grid container alignItems="flex-start" direction="column">
+                            <Grid item>
+                                <Typography variant="body1">Posted by <b>{post.owner}</b> {" "} {convertDateToElapsedTime(post.createdAt)}</Typography>
+                            </Grid>
+                            <Grid item>
+                                <Typography variant="h2">{post.title}</Typography>
+                            </Grid>
+                            <Grid item style={{ maxHeight: 50, overflowX: 'hidden', overflowY: 'hidden' }}>
+                                <Typography variant="body1" textAlign="left">{post.contents}</Typography>
+                            </Grid>
 
+                            {/* add Image */}
+
+                            {!post.image && (
+                                <Grid item marginTop={1}>
+                                    <Image
+                                        src={'https://source.unsplash.com/random/980x540'}
+                                        alt=''
+                                        height="540"
+                                        width="980"
+                                        layout='intrinsic'
+                                    />
+                                </Grid>
+                            )}
+                        </Grid>
+                    </ButtonBase>
                 </Grid>
             </Grid>
         </Paper>
