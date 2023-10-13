@@ -27,19 +27,29 @@ export default function Home() {
       throw new Error("Error in getting posts");
     };
 
+
+    // lets decide later if we show the posts only if the user is logged in
+    // if (user) {
     getPosts();
+    // } else {
+    //   setPosts([]);
+    // }
 
   }, []);
 
-  // console.log("User: ", user);
-  // console.log("Posts: ", posts);
-
   return (
-    // < Typography variant="h1" > "Hello World!"</Typography >
     <Container maxWidth="md">
       {posts.map((post) => (
         <PostView post={post} key={post.id} />
       ))}
+
+      {/* {user && posts.map((post) => (
+        <PostView post={post} key={post.id} />
+      ))}
+
+      {!user &&
+        <Typography variant="h2">Please login</Typography>
+      } */}
     </Container>
   );
 }
