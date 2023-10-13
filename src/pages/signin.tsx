@@ -20,18 +20,19 @@ interface IFormInputs {
 export default function signin() {
     const [alertOpen, setAlertOpen] = useState(false);
     const [signInError, setSignInError] = useState<string>("");
-    const { user, setUser } = useUser();
     const router = useRouter();
 
     const { register, formState: { errors }, handleSubmit } = useForm<IFormInputs>();
 
     const onSubmit: SubmitHandler<IFormInputs> = async (data) => {
         const { username, password } = data;
-        const ampUser = await Auth.signIn(username, password);
-        if (ampUser) {
+
+        try {
+            await Auth.signIn(username, password);
             router.push('/');
-        } else {
-            throw new Error('Authentication error. Please try again.');
+        } catch (e) {
+            setSignInError(e.message);
+            setAlertOpen(true);
         }
     }
 
@@ -61,9 +62,7 @@ export default function signin() {
                         type="text"
                         error={errors.username ? true : false}
                         helperText={errors.username ? errors.username.message : null}
-                        {...register("username", {
-                            required: { value: true, message: "Username is empty" },
-                        })}
+                        {...register("username")}
                     />
                 </Grid>
 
@@ -75,13 +74,7 @@ export default function signin() {
                         type="password"
                         error={errors.password ? true : false}
                         helperText={errors.password ? errors.password.message : null}
-                        {...register("password", {
-                            required: { value: true, message: "Password is empty" },
-                            minLength: {
-                                value: 6,
-                                message: "Password with minimum length of 6 required."
-                            }
-                        })}
+                        {...register("password")}
                     />
                 </Grid>
 
