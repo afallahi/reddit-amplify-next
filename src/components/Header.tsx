@@ -8,9 +8,10 @@ import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import { useUser } from '../context/AuthContext';
 import CommentIcon from '@mui/icons-material/Comment';
-import { Button, Menu, MenuItem, Theme } from '@mui/material';
+import { Button, Menu, MenuItem, Theme, Tooltip } from '@mui/material';
 import { useRouter } from 'next/router';
 import { Auth } from 'aws-amplify';
+
 
 export default function Header() {
     const { user } = useUser();
@@ -50,6 +51,10 @@ export default function Header() {
                     </Typography>
                     {user && (
                         <div>
+                            {/* <IconButton color="inherit">
+                                <AddIcon />
+                            </IconButton> */}
+                            <Button variant="outlined" onClick={() => router.push('/createPost')}>create post</Button>
                             <IconButton
                                 size="large"
                                 onClick={handleMenu}
