@@ -7,8 +7,7 @@ import { CacheProvider, EmotionCache } from '@emotion/react';
 import theme from '../../config/theme';
 import createEmotionCache from '../../config/createEmotionCache';
 
-import Amplify from "@aws-amplify/core";
-import { Auth } from "aws-amplify";
+import { Amplify } from "aws-amplify";
 import awsconfig from "../aws-exports";
 import AuthContext from '../context/AuthContext';
 Amplify.configure({ ...awsconfig, ssr: true }); // enable server side rendering
