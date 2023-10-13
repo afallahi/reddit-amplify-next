@@ -5,6 +5,7 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import Image from "next/image";
 import { useRouter } from 'next/router';
+import dateToElapsedTime from '../util/DateUtil';
 
 type Props = {
     post: Post
@@ -12,17 +13,6 @@ type Props = {
 
 export default function PostView({ post }: Props) {
     const router = useRouter();
-
-    const convertDateToElapsedTime = (date: string): string => {
-        const diff = (new Date(Date.now())).getTime() - (new Date(date)).getTime();
-        const hours = diff / 1000 / 60 / 60;
-        if (hours < 24) {
-            return (diff / 1000 / 60 / 60).toFixed(0) + "hours ago";
-        } else {
-            const days = hours / 24;
-            return days.toFixed(0) + "days ago";
-        }
-    }
 
     return (
         <Paper elevation={4}>
@@ -73,7 +63,7 @@ export default function PostView({ post }: Props) {
                     <ButtonBase onClick={() => router.push(`/post/${post.id}`)}>
                         <Grid container alignItems="flex-start" direction="column">
                             <Grid item>
-                                <Typography variant="body1">Posted by <b>{post.owner}</b> {" "} {convertDateToElapsedTime(post.createdAt)}</Typography>
+                                <Typography variant="body1">Posted by <b>{post.owner}</b> {" "} {dateToElapsedTime(post.createdAt)}</Typography>
                             </Grid>
                             <Grid item>
                                 <Typography variant="h2">{post.title}</Typography>

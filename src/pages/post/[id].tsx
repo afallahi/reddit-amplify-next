@@ -3,23 +3,27 @@ import { withSSRContext } from 'aws-amplify';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { listPosts, getPost } from '../../graphql/queries';
 import { GetPostQuery, ListPostsQuery, Post } from '../../API';
-
+import { Container } from "@mui/material";
+import PostView from "../../components/PostView";
+import Comment from "../../components/CommentView";
 
 interface Props {
     post: Post;
 }
 
 export default function postDetails({ post }: Props): ReactElement {
-    console.log("Post is: ", post);
     return (
-        <div>hello</div>
+        <Container maxWidth="md">
+            <PostView post={post} />
+            {post.comments.items.map((comment) => (
+                <Comment comment={comment} key={comment.id} />
+            ))}
+        </Container>
     )
 }
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
     const SSR = withSSRContext();
-
-    console.log("before PostQuery:");
 
     const postsQuery = (await SSR.API.graphql({
         query: getPost,
@@ -28,8 +32,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
             id: params.id,
         },
     })) as { data: GetPostQuery };
-
-    console.log("before return 1");
 
     return {
         props: {
@@ -45,22 +47,14 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
     const SSR = withSSRContext();
 
-    console.log("before response");
-
     const response = (await SSR.API.graphql({ query: listPosts, authMode: "API_KEY" })) as {
         data: ListPostsQuery;
         errors: any[];
     };
 
-    console.log("response: ", response);
-
-    console.log("before paths");
-
     const paths = response.data.listPosts.items.map((post) => ({
         params: { id: post.id },
     }));
-
-    console.log("before return 2");
 
     return { paths, fallback: 'blocking' };
 };
