@@ -1,0 +1,16 @@
+{
+  "resourceName": "blackkitimages",
+  "policyUUID": "b8b4314c",
+  "bucketName": "redditsls563b67131cec43d6b9cc10cbf3893ddf",
+  "storageAccess": "authAndGuest",
+  "guestAccess": [
+    "READ"
+  ],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}
