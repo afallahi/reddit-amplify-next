@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Post } from '../API'
 import { ButtonBase, Grid, IconButton, Paper, Typography } from '@mui/material';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
@@ -6,6 +6,7 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import Image from "next/image";
 import { useRouter } from 'next/router';
 import dateToElapsedTime from '../util/DateUtil';
+import { Storage } from 'aws-amplify';
 
 type Props = {
     post: Post
@@ -13,6 +14,22 @@ type Props = {
 
 export default function PostView({ post }: Props) {
     const router = useRouter();
+    const [postImage, setPostImage] = useState<string | undefined>(undefined);
+
+    useEffect(() => {
+        async function getImageFromS3() {
+            try {
+                const img = await Storage.get(post.image);
+                console.log("Found Image:", img);
+                setPostImage(img);
+            } catch (error) {
+                console.log("No image.");
+            }
+        }
+
+        getImageFromS3();
+
+    }, [])
 
     return (
         <Paper elevation={4}>
@@ -74,10 +91,10 @@ export default function PostView({ post }: Props) {
 
                             {/* add Image */}
 
-                            {!post.image && (
+                            {postImage && post.image && (
                                 <Grid item marginTop={1}>
                                     <Image
-                                        src={'https://source.unsplash.com/random/980x540'}
+                                        src={postImage}
                                         alt=''
                                         height="540"
                                         width="980"
